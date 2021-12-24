@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @SessionAttributes("user")
 public class LoginController {
 
-    /*add user in model attribute*/
     @ModelAttribute("user")
     public User setUpUserForm() {
         return new User();
@@ -30,21 +29,13 @@ public class LoginController {
     @PostMapping("/dologin")
     public String doLogin(@ModelAttribute("user") User user, Model model, @CookieValue(value = "setUser", defaultValue = "") String setUser,
                           HttpServletResponse response, HttpServletRequest request) {
-        //implement business logic
         if (user.getEmail().equals("a@a.com") && user.getPassword().equals("1")) {
-            if (user.getEmail() != null)
-                setUser = user.getEmail();
-
-            // create cookie and set it in response
+            setUser = user.getEmail();
             Cookie cookie = new Cookie("setUser", setUser);
-            cookie.setMaxAge(24 * 60 * 60);
+            cookie.setMaxAge(700);
             response.addCookie(cookie);
-
-            //get all cookies
             Cookie[] cookies = request.getCookies();
-            //iterate each cookie
             for (Cookie ck : cookies) {
-                //display only the cookie with the name 'setUser'
                 if (ck.getName().equals("setUser")) {
                     model.addAttribute("cookieValue", ck);
                     break;
